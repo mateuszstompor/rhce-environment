@@ -1,13 +1,10 @@
-# Use configuration of 4 managed nodes + 1 control node
-
-# Modifiable configuration
+# Configuration of 4 managed nodes + 1 control node
 
 # Password for root user is "vagrant"
 
 # IPs
 # controller 192.168.99.100
 # managedX 192.168.99.(100 + X)
-
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 NODES_NUMBER = ENV['NODES_NUMBER'] = '4'
@@ -47,6 +44,16 @@ Vagrant.configure("2") do |config|
         end
         v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk_file]
       end
+      node.vm.provision "shell", inline: <<-INPUT
+        echo Add aliases to the rest of hosts
+        sudo echo "127.0.0.1 localhost managed#{i} managed#{i}.example.com" > /etc/hosts
+        sudo echo "127.0.1.1 managed#{i}" >> /etc/hosts
+        for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
+        do
+          sudo echo "192.168.99.10$i managed$i managed$i.example.com" >> /etc/hosts
+        done
+        sudo echo "192.168.99.100 controller controller.example.com" >> /etc/hosts
+      INPUT
     end
   end
 
@@ -55,9 +62,11 @@ Vagrant.configure("2") do |config|
     controller.vm.hostname = "controller"
     controller.vm.network "private_network", ip: "192.168.99.100"
     controller.vm.provision "shell", inline: <<-INPUT
+      sudo echo "127.0.0.1 localhost controller controller.example.com" > /etc/hosts
+      sudo echo "127.0.1.1 controller" >> /etc/hosts
       for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
       do
-        sudo echo "192.168.99.10$i managed$i" >> /etc/hosts
+        sudo echo "192.168.99.10$i managed$i managed$i.example.com" >> /etc/hosts
       done
       sudo yum install -y epel-release --nogpgcheck
       sudo yum install -y ansible vim --nogpgcheck
