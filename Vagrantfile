@@ -10,7 +10,7 @@
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-NODES_NUMBER = ENV['NODES_NUMBER'] = '1'
+NODES_NUMBER = ENV['NODES_NUMBER'] = '4'
 ADDITIONAL_DISK_SIZE = 1024 * 5 # 5GiB
 ANSIBLE_USER = ENV['ANSIBLE_USER'] = 'ansible'
 ANSIBLE_USER_PASSWORD = ENV['ANSIBLE_USER_PASSWORD'] = 'ansible'
