@@ -21,7 +21,7 @@ USER_PASSWORD = ENV['USER_PASSWORD'] = 'vagrant'
 BOX = 'bento/centos-8'
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-Vagrant.configure("2") do |config|
+Vagrant.configure '2' do |config|
   config.ssh.username = USER
   config.ssh.password = USER_PASSWORD
   config.ssh.insert_key = 'true'
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
       node.vm.hostname = "managed#{i}"
       node.vm.network "private_network", ip: "192.168.99.#{i + 100}"
       node.vm.provider "virtualbox" do |v|
-        unless File.exist?(disk_file)
+        unless File.exist? disk_file
             v.customize ['createhd', '--filename', disk_file, '--size', ADDITIONAL_DISK_SIZE]
         end
         v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk_file]
@@ -78,7 +78,7 @@ Vagrant.configure("2") do |config|
       sudo yum install -y epel-release --nogpgcheck
       sudo yum install -y vim sshpass --nogpgcheck
       # # # # # # END
-      
+
 
       sudo -u #{ ENV['USER'] } /bin/sh << 'USER_INPUT'
         # # # # # # BEGIN: Define path where ssh keys are going to be stored
