@@ -73,32 +73,26 @@ Vagrant.configure '2' do |config|
       done
       # # # # # # END
 
-
       # # # # # # BEGIN: Install editing tools and repo containing ansible
       sudo yum install -y epel-release --nogpgcheck
       sudo yum install -y vim sshpass --nogpgcheck
+      # # # # # # END      
+
+      # # # # # # BEGIN: Define path where ssh keys are going to be stored
+      export SSH_PATH=#{ ENV['USER_HOME'] }/.ssh
       # # # # # # END
 
+      # # # # # # BEGIN: Generate public and private key pairs - id_rsa, id_rsa.pub
+      mkdir -pv $SSH_PATH
+      ssh-keygen -N "" -f $SSH_PATH/id_rsa
+      # # # # # # END
 
-      sudo -u #{ ENV['USER'] } /bin/sh << 'USER_INPUT'
-        # # # # # # BEGIN: Define path where ssh keys are going to be stored
-        export SSH_PATH=#{ ENV['USER_HOME'] }/.ssh
-        # # # # # # END
-
-
-        # # # # # # BEGIN: Generate public and private key pairs - id_rsa, id_rsa.pub
-        mkdir -pv $SSH_PATH
-        ssh-keygen -N "" -f $SSH_PATH/id_rsa
-        # # # # # # END
-        
-
-        # # # # # # BEGIN: Add public key to all managed servers
-        for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
-        do
-          sshpass -p "#{ ENV['USER_PASSWORD'] }" ssh-copy-id -f -o StrictHostKeyChecking=no -i $SSH_PATH/id_rsa.pub #{ ENV['USER'] }@managed$i 2> /dev/null
-        done
-        # # # # # # END
-USER_INPUT
+      # # # # # # BEGIN: Add public key to all managed servers
+      for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
+      do
+        sshpass -p "#{ ENV['USER_PASSWORD'] }" ssh-copy-id -f -o StrictHostKeyChecking=no -i $SSH_PATH/id_rsa.pub #{ ENV['USER'] }@managed$i 2> /dev/null
+      done
+      # # # # # # END
     INPUT
   end
 end
