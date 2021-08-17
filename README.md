@@ -76,7 +76,12 @@ for i in {1..4}; do
 done
 ```
 
-5. Execute ping command which check connectivity
+5. Install ansible
+```
+sudo yum install -y ansible
+```
+
+6. Execute ping command which check connectivity
 ```
 ansible localhost,servers -i inventory -m ping
 ```

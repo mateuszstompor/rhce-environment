@@ -23,6 +23,7 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", type: "rsync"
   config.vm.box_check_update = false
   config.vm.provision "shell", inline: <<-INPUT
+    echo Install python interpreter which is mandatory in order to use Ansible
     sudo yum module install -y python36
     if ! id #{ ENV['ANSIBLE_USER'] } > /dev/null 2> /dev/null
     then
@@ -73,7 +74,7 @@ Vagrant.configure("2") do |config|
         sudo echo "192.168.99.10$i managed$i managed$i.example.com" >> /etc/hosts
       done
       sudo yum install -y epel-release --nogpgcheck
-      sudo yum install -y ansible vim --nogpgcheck
+      sudo yum install -y vim --nogpgcheck
       echo Use defined user instead of vagrant
       export SWITCH_USER="sudo su - #{ ENV['ANSIBLE_USER'] }"
       export PROFILE_PATH=/home/vagrant/.bash_profile  
