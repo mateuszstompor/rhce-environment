@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_check_update = false
   config.vm.provision "shell", inline: <<-INPUT
     sudo yum module install -y python36
-    if ! id #{ ENV['ANSIBLE_USER'] } 2>&1 > /dev/null
+    if ! id #{ ENV['ANSIBLE_USER'] } > /dev/null 2> /dev/null
     then
       sudo useradd #{ ENV['ANSIBLE_USER'] }
     else
@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
         echo Add public key to all managed servers
         for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
         do
-          sshpass -p "#{ ENV['ANSIBLE_USER_PASSWORD'] }" ssh-copy-id -f -o StrictHostKeyChecking=no -i $SSH_PATH/id_rsa.pub #{ ENV['ANSIBLE_USER'] }@ansible$i
+          sshpass -p "#{ ENV['ANSIBLE_USER_PASSWORD'] }" ssh-copy-id -f -o StrictHostKeyChecking=no -i $SSH_PATH/id_rsa.pub #{ ENV['ANSIBLE_USER'] }@ansible$i 2> /dev/null
         done
 USER_INPUT
     INPUT
