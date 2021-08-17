@@ -52,6 +52,69 @@ vagrant halt
 vagrant up
 ```
 
+## Hello world
+In order to test if everything works correctly an ad-hoc command can be used
+1. SSH to the control node from your host machine
+```
+vagrant ssh controller
+```
+
+2. Create a project directory
+```
+mkdir -p helloworld
+```
+3. Navigate to the project's directory
+```
+cd helloworld
+```
+
+4. Create an inventory file
+```
+echo "[servers]" > inventory
+for i in {1..4}; do
+  echo managed$i >> inventory
+done
+```
+
+5. Execute ping command which check connectivity
+```
+ansible localhost,servers -i inventory -m ping
+```
+You should see something similar to below output, it's an indication of correctly working infrastructure
+```
+localhost | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+managed1 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+managed3 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+managed4 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+managed2 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+```
 
 ## Inspirations
 * [RHCE_ENV](https://github.com/theJaxon/RHCE_ENV)
