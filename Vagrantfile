@@ -6,6 +6,10 @@
 # controller 192.168.99.100
 # managedX 192.168.99.(100 + X)
 
+# Accessing the nodes
+# Each node can be accessed by its short name - controller, manged1, manged2, manged3,manged4
+# Alternatively fqdn can be used, e. g. controller.example.com, managed1.example.com 
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 NODES_NUMBER = ENV['NODES_NUMBER'] = '4'
 ADDITIONAL_DISK_SIZE = 1024 * 5 # 5GiB
@@ -71,7 +75,14 @@ Vagrant.configure("2") do |config|
       sudo yum install -y epel-release --nogpgcheck
       sudo yum install -y ansible vim --nogpgcheck
       echo Use defined user instead of vagrant
-      sudo echo "sudo su - #{ ENV['ANSIBLE_USER'] }" >> /home/vagrant/.bash_profile
+      export SWITCH_USER="sudo su - #{ ENV['ANSIBLE_USER'] }"
+      export PROFILE_PATH=/home/vagrant/.bash_profile  
+      if grep -Fxq "$SWITCH_USER" $PROFILE_PATH
+      then
+        echo Skipping step of adding user switch - command already there
+      else
+        sudo echo $SWITCH_USER >> $PROFILE_PATH
+      fi
       sudo -u #{ ENV['ANSIBLE_USER'] } /bin/sh << 'USER_INPUT'
         export SSH_PATH=/home/#{ ENV['ANSIBLE_USER'] }/.ssh
         mkdir -pv $SSH_PATH
