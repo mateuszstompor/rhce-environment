@@ -6,7 +6,7 @@
 
 # IPs
 # controller 192.168.99.100
-# nodeX 192.168.99.(100 + X)
+# managedX 192.168.99.(100 + X)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -36,9 +36,9 @@ Vagrant.configure("2") do |config|
   INPUT
 
   (1..NODES_NUMBER.to_i).each do |i|
-    config.vm.define "node#{i}" do |node|
+    config.vm.define "managed#{i}" do |node|
       node.vm.box = BOX
-      node.vm.hostname = "ansible#{i}"
+      node.vm.hostname = "managed#{i}"
       node.vm.network "private_network", ip: "192.168.99.#{i + 100}"
       disk_file = "./storage/disk#{i}.vdi"
       node.vm.provider "virtualbox" do |v|
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     controller.vm.provision "shell", inline: <<-INPUT
       for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
       do
-        sudo echo "192.168.99.10$i ansible$i" >> /etc/hosts
+        sudo echo "192.168.99.10$i managed$i" >> /etc/hosts
       done
       sudo yum install -y epel-release --nogpgcheck
       sudo yum install -y ansible vim --nogpgcheck
@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
         echo Add public key to all managed servers
         for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
         do
-          sshpass -p "#{ ENV['ANSIBLE_USER_PASSWORD'] }" ssh-copy-id -f -o StrictHostKeyChecking=no -i $SSH_PATH/id_rsa.pub #{ ENV['ANSIBLE_USER'] }@ansible$i 2> /dev/null
+          sshpass -p "#{ ENV['ANSIBLE_USER_PASSWORD'] }" ssh-copy-id -f -o StrictHostKeyChecking=no -i $SSH_PATH/id_rsa.pub #{ ENV['ANSIBLE_USER'] }@managed$i 2> /dev/null
         done
 USER_INPUT
     INPUT
