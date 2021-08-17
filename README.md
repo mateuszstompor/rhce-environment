@@ -1,8 +1,11 @@
 # RHCE environment
-This repository contains a vagrant configuration which describes infrastructure of nodes that can be used for RHCE exam preparation (EX294). Idea of creating such a similiar project in comparision to what's currently available is to provide set of exercises and solutions which will be relevant to the configuration and allow the people preparing for the exam to check exact steps they need to follow in order to solve them.
+This repository contains a vagrant configuration which describes infrastructure of nodes that can be used for RHCE exam preparation (EX294). Idea of creating such a similiar project in comparision to what's currently available is to provide set of exercises and solutions which will be relevant to the configuration and allow the people preparing for the exam to check exact steps they need to follow in order to solve them
 
 ## Exercises 
-Stay tuned...
+Look at [this repository](https://github.com/mateuszstompor/rhce-ex294-exam). More exercises are going to be added soon 
+
+## Assumptions
+Vagrant file has description of a minimal installation and infrastructure description. There are five nodes in total. One control node - controller - and four managed nodes - host names `managed[1:4]`. Managed hosts can be accessed from controller passwordless using the root account. **Root password is `vagrant`**
 
 ## How to install
 ### macOS
