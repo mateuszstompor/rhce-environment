@@ -86,11 +86,25 @@ Vagrant.configure '2' do |config|
       mkdir -pv $SSH_PATH
       ssh-keygen -N "" -f $SSH_PATH/id_rsa
       # # # # # # END
-
-      # # # # # # BEGIN: Add public key to all managed servers
+      
+      # # # # # # BEGIN: Add fingerprints of all managed servers
       for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
       do
-        sshpass -p "#{ ENV['USER_PASSWORD'] }" ssh-copy-id -f -o StrictHostKeyChecking=no -i $SSH_PATH/id_rsa.pub #{ ENV['USER'] }@managed$i 2> /dev/null
+        for name in managed$i.example.com managed$i
+        do
+          export FINGERPRINT=$(ssh-keyscan $name 2> /dev/null)
+          if ! grep -Fxq "$FINGERPRINT" ~/.ssh/known_hosts
+          then
+              echo $FINGERPRINT >> ~/.ssh/known_hosts
+          fi
+        done
+      done
+      # # # # # # END
+
+      # # # # # # BEGIN: Push public key to all managed servers
+      for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
+      do
+        sshpass -p "#{ ENV['USER_PASSWORD'] }" ssh-copy-id -f -i $SSH_PATH/id_rsa.pub #{ ENV['USER'] }@managed$i 2> /dev/null
       done
       # # # # # # END
     INPUT
