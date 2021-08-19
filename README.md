@@ -1,26 +1,26 @@
 # RHCE environment
-This repository contains a vagrant configuration which describes infrastructure of nodes that can be used for RHCE exam preparation (EX294). Idea of creating such a similiar project in comparision to what's currently available is to provide set of exercises and solutions that are relevant to the configuration and allow the people preparing for the exam to check exact steps they need to follow in order to solve them
+This repository contains a vagrant configuration that describes the infrastructure of nodes that can be used for RHCE exam preparation (EX294). The idea of creating such a similar project in comparison to what's currently available is to provide a set of exercises and solutions that are relevant to the configuration and allow the people preparing for the exam to check the exact steps they need to follow in order to solve them
 
 ## Exercises 
-Whole purpose of using this project is to practise. Don't waste time, spin up machines and check out [this repository](https://github.com/mateuszstompor/rhce-ex294-exam). More content is going to be added soon 
+The whole purpose of using this project is to practice. Don't waste time, spin up machines and check out [this repository](https://github.com/mateuszstompor/rhce-ex294-exam). More content is going to be added soon 
 
 ## Assumptions
-Vagrant file has description of a minimal installation and infrastructure description
+Vagrant file has a description of a minimal installation and infrastructure description
 
 ### Cluster
-There are four nodes in total deployed
+There are five nodes in total deployed
 * 1 control node
 * 4 managed nodes
 
 ### User management
-Each managed host can be access directly thorugh vagrant/virtualbox using `root` account. **Root password is `vagrant`**. On top of that managed hosts are accessible from the controller node with use of ssh
+Each managed host can be accessed directly through Vagrant/VirtualBox using `root` account. **Root password is `vagrant`**. On top of that managed hosts are accessible from the controller node with use of ssh
 
 
 ### Network
 All machines have two network adapters configured. One is used for NAT access and the second one allows hosts to talk to each other
 
 #### Aliases
-There are symbolic names associated with each hosts, here is how the definitions look like
+There are symbolic names associated with each host, here is how the definitions look like
 ```
 192.168.99.100    controller  controller.example.com
 192.168.99.101    managed1    managed1.example.com
@@ -65,7 +65,7 @@ vagrant up --provision
 
 ## Commonly used commands
 ### Accessing the machines
-In order to access control node execute
+In order to access control-node execute
 ```
 vagrant ssh controller
 ```
@@ -113,7 +113,7 @@ sudo yum install -y ansible
 ```
 ansible localhost,servers -i inventory -m ping
 ```
-You should see something similar to below output, it's an indication of correctly working infrastructure
+You should see something similar to the below output, it's an indication of correctly working infrastructure
 ```
 localhost | SUCCESS => {
     "changed": false,
