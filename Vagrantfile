@@ -72,7 +72,11 @@ Vagrant.configure '2' do |config|
         sudo echo "192.168.99.10$i managed$i managed$i.example.com" >> /etc/hosts
       done
       # # # # # # END
-
+      
+      # # # # # # BEGIN: Install man pages
+      sudo yum install -y man-pages
+      # # # # # # END      
+      
       # # # # # # BEGIN: Install editing tools and repo containing ansible
       sudo yum install -y epel-release --nogpgcheck
       sudo yum install -y vim sshpass --nogpgcheck
