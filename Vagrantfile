@@ -39,6 +39,7 @@ Vagrant.configure '2' do |config|
       node.vm.box = BOX
       node.vm.hostname = "managed#{i}"
       node.vm.network "private_network", ip: "192.168.99.#{i + 100}"
+      node.vm.network "private_network", ip: "192.168.101.#{i + 100}", auto_config: false
       node.vm.provider "virtualbox" do |v|
         unless File.exist? disk_file
             v.customize ['createhd', '--filename', disk_file, '--size', ADDITIONAL_DISK_SIZE]
@@ -63,6 +64,7 @@ Vagrant.configure '2' do |config|
     controller.vm.box = BOX
     controller.vm.hostname = "controller"
     controller.vm.network "private_network", ip: "192.168.99.100"
+    controller.vm.network "private_network", ip: "192.168.101.100", auto_config: false
     controller.vm.provision "shell", inline: <<-INPUT
       # # # # # # BEGIN: Define fqdn and short names
       sudo echo "127.0.0.1 localhost controller controller.example.com" > /etc/hosts

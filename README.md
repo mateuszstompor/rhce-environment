@@ -15,9 +15,8 @@ There are five nodes in total deployed
 ### User management
 Each managed host can be accessed directly through Vagrant/VirtualBox using `root` account. **Root password is `vagrant`**. On top of that managed hosts are accessible from the controller node with use of ssh
 
-
 ### Network
-All machines have two network adapters configured. One is used for NAT access and the second one allows hosts to talk to each other
+All machines have two network adapters configured. One is used for NAT access and the second one allows hosts to talk to each other. There is a third adapter not used nor configured. It is left in such a state intentionally to allow the users to perform more sophisticated exercises.
 
 #### Aliases
 There are symbolic names associated with each host, here is how the definitions look like
