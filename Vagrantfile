@@ -64,7 +64,6 @@ Vagrant.configure '2' do |config|
     controller.vm.box = BOX
     controller.vm.hostname = "controller"
     controller.vm.network "private_network", ip: "192.168.99.100"
-    controller.vm.network "private_network", ip: "192.168.101.100", auto_config: false
     controller.vm.provision "shell", inline: <<-INPUT
       # # # # # # BEGIN: Define fqdn and short names
       sudo echo "127.0.0.1 localhost controller controller.example.com" > /etc/hosts
