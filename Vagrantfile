@@ -95,9 +95,9 @@ Vagrant.configure '2' do |config|
       # # # # # # BEGIN: Add fingerprints of all managed servers
       for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
       do
-        for name in managed$i.example.com managed$i
+        for name in {managed$i.example.com,managed$i}
         do
-          export FINGERPRINT=$(ssh-keyscan $name 2> /dev/null)
+          export FINGERPRINT=$(ssh-keyscan -t rsa $name 2> /dev/null)
           if ! grep -Fxq "$FINGERPRINT" ~/.ssh/known_hosts 2> /dev/null
           then
               echo $FINGERPRINT >> ~/.ssh/known_hosts
