@@ -8,9 +8,9 @@
 # controller 192.168.99.100
 # managedX 192.168.99.(100 + X)
 
-# --- Accessing the nodes --- 
+# --- Accessing the nodes ---
 # Each node can be accessed by its short name - controller, manged1, manged2, manged3,manged4
-# Alternatively fqdn can be used, e. g. controller.example.com, managed1.example.com 
+# Alternatively fqdn can be used, e. g. controller.example.com, managed1.example.com
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 NODES_NUMBER = ENV['NODES_NUMBER'] = '4'
@@ -29,6 +29,9 @@ Vagrant.configure '2' do |config|
   config.vm.box_check_update = false
   config.vm.provision "shell", inline: <<-INPUT
     # # # # # # BEGIN: Install python interpreter mandatory to use Ansible
+    sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+    sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
     sudo yum module install -y python36
     # # # # # # END
   INPUT
@@ -73,15 +76,21 @@ Vagrant.configure '2' do |config|
         sudo echo "192.168.99.10$i managed$i managed$i.example.com" >> /etc/hosts
       done
       # # # # # # END
-      
+
+      sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+      sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
       # # # # # # BEGIN: Install man pages
       sudo yum install -y man-pages
-      # # # # # # END      
-      
+      # # # # # # END
+
       # # # # # # BEGIN: Install editing tools and repo containing ansible
       sudo yum install -y epel-release --nogpgcheck
+
+      sudo sed -i 's|^metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=$basearch&infra=$infra&content=$contentdir|baseurl=https://dl.fedoraproject.org/pub/archive/epel/8.5.2022-05-10/Everything/x86_64/|' /etc/yum.repos.d/epel.repo
+
       sudo yum install -y vim sshpass --nogpgcheck
-      # # # # # # END      
+      # # # # # # END
 
       # # # # # # BEGIN: Define path where ssh keys are going to be stored
       export SSH_PATH=#{ ENV['USER_HOME'] }/.ssh
@@ -91,7 +100,7 @@ Vagrant.configure '2' do |config|
       mkdir -pv $SSH_PATH
       ssh-keygen -N "" -f $SSH_PATH/id_rsa
       # # # # # # END
-      
+
       # # # # # # BEGIN: Add fingerprints of all managed servers
       for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
       do
