@@ -1,0 +1,16 @@
+name: Integration Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build_project:
+    runs-on: macOS-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v1
+    - name: Install homebrew
+      run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    - name: Install virtualbox
+      run: brew install --cask virtualbox
