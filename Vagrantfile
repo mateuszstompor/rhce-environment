@@ -5,8 +5,9 @@
 # Password for root user is "vagrant"
 
 # --- IPs ---
-# controller 192.168.99.100
-# managedX 192.168.99.(100 + X)
+# controller 192.168.56.100
+# managedX 192.168.56.(100 + X)
+# Where X is defined as 1, 2, 3 or 4
 
 # --- Accessing the nodes ---
 # Each node can be accessed by its short name - controller, manged1, manged2, manged3,manged4
@@ -41,8 +42,8 @@ Vagrant.configure '2' do |config|
       disk_file = "./storage/disk#{i}.vdi"
       node.vm.box = BOX
       node.vm.hostname = "managed#{i}"
-      node.vm.network "private_network", ip: "192.168.99.#{i + 100}"
-      node.vm.network "private_network", ip: "192.168.101.#{i + 100}", auto_config: false
+      node.vm.network "private_network", ip: "192.168.56.#{i + 100}"
+      node.vm.network "private_network", ip: "192.168.57.#{i + 100}", auto_config: false
       node.vm.provider "virtualbox" do |v|
         unless File.exist? disk_file
             v.customize ['createhd', '--filename', disk_file, '--size', ADDITIONAL_DISK_SIZE]
@@ -55,9 +56,9 @@ Vagrant.configure '2' do |config|
         sudo echo "127.0.1.1 managed#{i}" >> /etc/hosts
         for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
         do
-          sudo echo "192.168.99.10$i managed$i managed$i.example.com" >> /etc/hosts
+          sudo echo "192.168.56.10$i managed$i managed$i.example.com" >> /etc/hosts
         done
-        sudo echo "192.168.99.100 controller controller.example.com" >> /etc/hosts
+        sudo echo "192.168.56.100 controller controller.example.com" >> /etc/hosts
         # # # # # # END
       INPUT
     end
@@ -66,14 +67,14 @@ Vagrant.configure '2' do |config|
   config.vm.define "controller" do |controller|
     controller.vm.box = BOX
     controller.vm.hostname = "controller"
-    controller.vm.network "private_network", ip: "192.168.99.100"
+    controller.vm.network "private_network", ip: "192.168.56.100"
     controller.vm.provision "shell", inline: <<-INPUT
       # # # # # # BEGIN: Define fqdn and short names
       sudo echo "127.0.0.1 localhost controller controller.example.com" > /etc/hosts
       sudo echo "127.0.1.1 controller" >> /etc/hosts
       for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
       do
-        sudo echo "192.168.99.10$i managed$i managed$i.example.com" >> /etc/hosts
+        sudo echo "192.168.56.10$i managed$i managed$i.example.com" >> /etc/hosts
       done
       # # # # # # END
 
