@@ -8,9 +8,13 @@ jobs:
   build_project:
     runs-on: macOS-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v1
     - name: Install homebrew
-      run: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      run:  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     - name: Install virtualbox
       run: brew install --cask virtualbox
+    - name: Install vagrant
+      run: brew install --cask vagrant
+    - name: Checkout Repository
+      uses: actions/checkout@v1
+    - name: Provision
+      run: vagrant up --provision
