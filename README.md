@@ -21,11 +21,11 @@ All machines have two network adapters configured. One is used for NAT access an
 #### Aliases
 There are symbolic names associated with each host, here is how the definitions look like
 ```
-192.168.99.100    controller  controller.example.com
-192.168.99.101    managed1    managed1.example.com
-192.168.99.102    managed2    managed2.example.com
-192.168.99.103    managed3    managed3.example.com
-192.168.99.104    managed4    managed4.example.com
+192.168.56.100    controller  controller.example.com
+192.168.56.101    managed1    managed1.example.com
+192.168.56.102    managed2    managed2.example.com
+192.168.56.103    managed3    managed3.example.com
+192.168.56.104    managed4    managed4.example.com
 ```
 
 ### Storage
