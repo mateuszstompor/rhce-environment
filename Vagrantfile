@@ -90,7 +90,7 @@ Vagrant.configure '2' do |config|
       sudo yum install -y epel-release --nogpgcheck
 
       sudo sed -i 's|^metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=$basearch&infra=$infra&content=$contentdir|baseurl=https://dl.fedoraproject.org/pub/archive/epel/8.5.2022-05-10/Everything/x86_64/|' /etc/yum.repos.d/epel.repo
-      sudo yum update --disablerepo="*" --enablerepo="epel" -y
+      sudo yum clean all -y
 
       sudo yum install -y vim sshpass --nogpgcheck
       # # # # # # END
