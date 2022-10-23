@@ -31,10 +31,10 @@ Vagrant.configure '2' do |config|
   config.vm.box_check_update = false
   config.vm.provision "shell", inline: <<-INPUT
     # # # # # # BEGIN: Install python interpreter mandatory to use Ansible
-    sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-    sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-
-    sudo yum module install -y python36
+    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+    yum module install -y python36
+    yum clean all -y
     # # # # # # END
   INPUT
 
@@ -53,13 +53,13 @@ Vagrant.configure '2' do |config|
       end
       node.vm.provision "shell", inline: <<-INPUT
         # # # # # # BEGIN: Define fqdn and short names
-        sudo echo "127.0.0.1 localhost managed#{i} managed#{i}.example.com" > /etc/hosts
-        sudo echo "127.0.1.1 managed#{i}" >> /etc/hosts
+        echo "127.0.0.1 localhost managed#{i} managed#{i}.example.com" > /etc/hosts
+        echo "127.0.1.1 managed#{i}" >> /etc/hosts
         for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
         do
-          sudo echo "192.168.56.10$i managed$i managed$i.example.com" >> /etc/hosts
+          echo "192.168.56.10$i managed$i managed$i.example.com" >> /etc/hosts
         done
-        sudo echo "192.168.56.100 controller controller.example.com" >> /etc/hosts
+        echo "192.168.56.100 controller controller.example.com" >> /etc/hosts
         # # # # # # END
       INPUT
     end
@@ -71,28 +71,27 @@ Vagrant.configure '2' do |config|
     controller.vm.network "private_network", ip: "192.168.56.100"
     controller.vm.provision "shell", inline: <<-INPUT
       # # # # # # BEGIN: Define fqdn and short names
-      sudo echo "127.0.0.1 localhost controller controller.example.com" > /etc/hosts
-      sudo echo "127.0.1.1 controller" >> /etc/hosts
+      echo "127.0.0.1 localhost controller controller.example.com" > /etc/hosts
+      echo "127.0.1.1 controller" >> /etc/hosts
       for ((i=1; i<=#{ ENV['NODES_NUMBER'] }; i++))
       do
-        sudo echo "192.168.56.10$i managed$i managed$i.example.com" >> /etc/hosts
+        echo "192.168.56.10$i managed$i managed$i.example.com" >> /etc/hosts
       done
       # # # # # # END
 
-      sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-      sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+      sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+      sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
       # # # # # # BEGIN: Install man pages
-      sudo yum install -y man-pages
+      yum install -y man-pages
       # # # # # # END
 
       # # # # # # BEGIN: Install editing tools and repo containing ansible
-      sudo yum install -y epel-release --nogpgcheck
-
-      sudo sed -i 's|^metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=$basearch&infra=$infra&content=$contentdir|baseurl=https://dl.fedoraproject.org/pub/archive/epel/8.5.2022-05-10/Everything/x86_64/|' /etc/yum.repos.d/epel.repo
-      sudo yum update --disablerepo="*" --enablerepo="epel" -y
-
-      sudo yum install -y vim sshpass --nogpgcheck
+      yum install -y epel-release --nogpgcheck
+      sed -i 's|^metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-8&arch=$basearch&infra=$infra&content=$contentdir|baseurl=https://dl.fedoraproject.org/pub/archive/epel/8.5.2022-05-10/Everything/x86_64/|' /etc/yum.repos.d/epel.repo
+      yum install -y vim --nogpgcheck
+      wget http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/sshpass-1.09-4.el8.x86_64.rpm
+      rpm -i sshpass*.rpm
       # # # # # # END
 
       # # # # # # BEGIN: Define path where ssh keys are going to be stored
@@ -124,6 +123,7 @@ Vagrant.configure '2' do |config|
         sshpass -p "#{ ENV['USER_PASSWORD'] }" ssh-copy-id -f -i $SSH_PATH/id_rsa.pub #{ ENV['USER'] }@managed$i 2> /dev/null
       done
       # # # # # # END
+      yum clean all -y
     INPUT
   end
 end

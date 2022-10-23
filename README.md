@@ -1,4 +1,4 @@
-# RHCE environment
+# RHCE environment &middot; [![provision](https://github.com/mateuszstompor/rhce-environment/actions/workflows/provision.yml/badge.svg?branch=main)](https://github.com/mateuszstompor/rhce-environment/actions/workflows/provision.yml)
 This repository contains a vagrant configuration that describes the infrastructure of nodes that can be used for RHCE exam preparation (EX294). The idea of creating such a similar project in comparison to what's currently available is to provide a set of exercises and solutions that are relevant to the configuration and allow the people preparing for the exam to check the exact steps they need to follow in order to solve them
 
 ## Exercises 
